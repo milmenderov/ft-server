@@ -1,0 +1,36 @@
+version: "3.9"
+
+networks:
+  ft-network:
+    name: ft-network
+    driver: bridge
+
+services:
+  nginx:
+    build:
+      context: .
+      dockerfile: ./nginx-phpwp/Dockerfile-nginx
+    image: ft_server
+    container_name: ft_server
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - ft-network
+    depends_on:
+      - mysql
+
+  mysql:
+    build:
+     context: .
+     dockerfile: mysql/Dockerfile-mysql
+    image: mysql
+    container_name: mysql
+    volumes:
+      - mysql-volume:/var/lib/mysql
+    networks:
+      - ft-network
+
+volumes:
+  mysql-volume:
+    name: mysql-volume
